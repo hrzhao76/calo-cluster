@@ -24,7 +24,7 @@ Then, run the following commands to create a conda environment with the necessar
 ```
 conda create -n calo_cluster python=3.8
 conda activate calo_cluster
-conda install numpy pandas plotly jupyter tqdm yaml matplotlib seaborn scitkit-learn
+conda install numpy pandas plotly jupyter tqdm yaml matplotlib seaborn scikit-learn
 conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
 conda install pytorch-lightning submitit uproot -c conda-forge
 pip install --upgrade git+https://github.com/mit-han-lab/torchsparse.git@v1.4.0

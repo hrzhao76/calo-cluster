@@ -11,7 +11,7 @@ voxel_size: 0.05
 cluster_ignore_label: 0
 
 # data location (modify as needed):
-data_dir: /data/simple
+data_dir: /content/drive/MyDrive/ML-Vertexing/data/simple/ # Google Colab path
 
 # config fields:
 feats: ['x', 'y', 'z', 'E']
