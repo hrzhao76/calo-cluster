@@ -72,7 +72,7 @@ class SimpleDataModule(BaseDataModule):
     @staticmethod
     def generate(data_dir, l=10, n_noise=1000, noise_scale=0.5, signal_scale=10.0, n_events=10000) -> None:
         logging.info(f'Generating data at {data_dir}.')
-        rng = np.random.default_rng()
+        rng = np.random.default_rng(42) # set a random seed to make sure reproductivity 
         for i in tqdm(range(n_events)):
             df = SimpleDataModule._generate_event(rng, l, n_noise, noise_scale, signal_scale)
             event_path = data_dir / f'{i:05}.pkl'
