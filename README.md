@@ -26,7 +26,7 @@ conda create -n calo_cluster python=3.8
 conda activate calo_cluster
 conda install numpy pandas plotly jupyter tqdm yaml matplotlib seaborn scikit-learn
 conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
-conda install pytorch-lightning submitit uproot -c conda-forge
+conda install pytorch-lightning=1.4.2 omegaconf=2.1.0 submitit uproot -c conda-forge
 pip install --upgrade git+https://github.com/mit-han-lab/torchsparse.git@v1.4.0
 pip install hydra-core==1.1.0 wandb
 
