@@ -85,7 +85,7 @@ from pathlib import Path
 from calo_cluster.datasets.vertex import VertexDataModule
 root_data_path = Path('/data/vertex')
 raw_data_dir = root_data_path / 'raw'
-#VertexDataModule.root_to_pickle(root_data_path, raw_data_dir)
+VertexDataModule.root_to_pickle(root_data_path, raw_data_dir)
 # %%
 occupancy = VertexDataModule.voxel_occupancy(voxel_size=0.001, dataset='vertex')
 # %%

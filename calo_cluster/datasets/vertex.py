@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
-
+import numpy as np
 from calo_cluster.datasets.mixins.combine_labels import (
     CombineLabelsDataModuleMixin, CombineLabelsDatasetMixin)
 from calo_cluster.datasets.mixins.offset import (OffsetDataModuleMixin,
@@ -35,4 +35,4 @@ class VertexDataModule(SparseDataModuleMixin, CombineLabelsDataModuleMixin, Scal
 class VertexOffsetDataModule(SparseDataModuleMixin, CombineLabelsDataModuleMixin, OffsetDataModuleMixin, ScaledDataModuleMixin, VertexDataModuleMixin):
     def make_dataset(self, files: List[Path], split: str) -> VertexOffsetDataset:
         kwargs = self.make_dataset_kwargs()
-        return VertexOffsetDataset(files=files, split=split, **kwargs)
+        return VertexOffsetDataset(files=files, **kwargs)

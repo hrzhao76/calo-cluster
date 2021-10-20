@@ -140,7 +140,7 @@ class BaseDataModule(AbstractBaseDataModule, pl.LightningDataModule):
             dataset,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
-            pin_memory=True,
+            pin_memory=False,
             collate_fn=dataset.collate_fn,
             worker_init_fn=lambda worker_id: np.random.seed(self.seed + worker_id))
 

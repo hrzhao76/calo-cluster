@@ -11,7 +11,11 @@ voxel_size: 0.05
 cluster_ignore_labels: [-1,]
 
 # data location (modify as needed):
-data_dir: /data/vertex/raw
+data_dir: /data/vertex/
+raw_data_dir: /data/vertex/raw
+weight: null
+semantic_label: semantic_label
+instance_target: truth
 
 # config fields:
 feats: ['d0', 'z0', 'phi', 'theta', 'qp', 'time']

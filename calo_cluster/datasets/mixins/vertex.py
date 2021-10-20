@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 
+import numpy as np
 import pandas as pd
 import uproot
 from calo_cluster.datasets.base import BaseDataModule
-from calo_cluster.datasets.pandas_data import PandasDataset
+from calo_cluster.datasets.pandas_data import PandasDataModule, PandasDataset
 from tqdm import tqdm
 
 
@@ -36,7 +37,7 @@ def get_match_idx(truth_z0_list, reco_z0_list, reco_vtxID_list):
 
 
 @dataclass
-class VertexDataModuleMixin(BaseDataModule):
+class VertexDataModuleMixin(PandasDataModule):
     instance_target: str
 
     def make_dataset_kwargs(self) -> dict:
@@ -77,6 +78,7 @@ class VertexDataModuleMixin(BaseDataModule):
                 flat_event = pd.DataFrame(df_dict)
                 match_idx = get_match_idx(np.array(truth_jagged_dict['z0'][n]), np.array(reco_jagged_dict['z0'][n]), np.array(reco_jagged_dict['vtxID'][n]))
                 flat_event['AMVF_reco_ID'] = match_idx
+                flat_event['semantic_label'] = [1] * len(flat_event)
                 flat_event[coords] /= scale
                 flat_event.to_pickle(raw_data_dir / f'event_{n+ni:05}.pkl')
             ni += n + 1
