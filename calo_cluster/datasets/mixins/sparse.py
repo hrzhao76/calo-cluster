@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Callable, Dict, List
 import hydra
 
@@ -7,7 +8,7 @@ from calo_cluster.utils.quantize import sparse_quantize
 from hydra import compose, initialize_config_dir
 from torchsparse import SparseTensor
 from torchsparse.utils.collate import sparse_collate_fn
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from .base import AbstractBaseDataModule, AbstractBaseDataset
 
@@ -68,28 +69,39 @@ class SparseDataModuleMixin(AbstractBaseDataModule):
         kwargs.update(super().make_dataset_kwargs())
         return kwargs
 
-    def _voxel_occupancy(self) -> np.array:
-        """Returns the average voxel occupancy for each batch in the train dataloader."""
+    def voxel_occupancy(self, only_different_labels: bool = False, label_type: str = None) -> np.array:
+        """Returns the average number of points in each occupied voxel for each file in the train dataset.
+        
+        Parameters:
+        only_different_labels: if true, only count the number of points with different labels.
+        label_type: one of [None, instance, semantic] -- the type of label to use if only_different_labels is true.
+        """
         if not self.sparse:
             raise RuntimeError(
                 'voxel_occupancy called, but dataset is not sparse!')
-
         self.batch_size = 1
         dataloader = self.train_dataloader()
-        voxel_occupancies = np.zeros(len(dataloader.dataset))
-        for i, batch in tqdm(enumerate(dataloader), total=len(dataloader.dataset)):
-            voxel_occupancies[i] = len(
-                batch['inverse_map'].C) / len(batch['features'].C)
+        dataset = dataloader.dataset
+        if only_different_labels:
+            if label_type == 'instance':
+                label = dataset.instance_label
+                label_idx = 1
+            elif label_type == 'semantic':
+                label = dataset.semantic_label
+                label_idx = 0
+            else:
+                raise NotImplementedError()
+        
+        voxel_occupancies = np.zeros(len(dataset))
+        for i, batch in tqdm(enumerate(dataloader), total=len(dataset)):
+            if only_different_labels:
+                original = dataset._get_df(i)[label].values
+                sampled = batch['labels'].F[:,label_idx][batch['inverse_map'].F].numpy()
+                mask = (original == sampled)
+                kept = mask.sum()
+            else:
+                kept = len(batch['features'].C)
+            total = voxel_occupancies[i] = len(batch['inverse_map'].C)
+            voxel_occupancies[i] = total / kept
 
         return voxel_occupancies
-
-    @staticmethod
-    def voxel_occupancy(voxel_size, dataset):
-        # NOTE: fix this for other users.
-        with initialize_config_dir(config_dir='/home/alexj/hgcal-dev/configs'):
-            cfg = compose(config_name='config', overrides=[
-                          f'dataset={dataset}', f'dataset.voxel_size={voxel_size}', 'dataset.sparse=True', 'train=single_gpu', 'dataset.num_workers=0'])
-            dm = hydra.utils.instantiate(cfg.dataset, task='instance')
-        dm.prepare_data()
-        dm.setup('fit')
-        return dm._voxel_occupancy()
