@@ -1,7 +1,7 @@
 config_version: 2
-outputs_dir: /content/drive/MyDrive/ML-Vertexing/training_outputs
-predictions_dir: /content/drive/MyDrive/ML-Vertexing/predictions
-plots_dir: /plots
+outputs_dir: /global/cscratch1/sd/hrzhao/calo_cluster/training_outputs
+predictions_dir: /global/cscratch1/sd/hrzhao/calo_cluster/predictions
+plots_dir: /global/cscratch1/sd/hrzhao/calo_cluster/plots
 hydra:
   run:
     dir: ${outputs_dir}/hydra/${now:%Y-%m-%d}/${now:%H-%M-%S}
