@@ -83,7 +83,7 @@ class BaseExperiment():
 
         self.plots_dir.mkdir(exist_ok=True, parents=True)
 
-        self.task = self.cfg.criterion.task
+        self.task = self.cfg.task
 
     def _get_ckpt(self, cfg, ckpt_name):
         ckpt_dir = Path(cfg.outputs_dir) / cfg.wandb.project / \
@@ -105,7 +105,7 @@ class BaseExperiment():
         config_path = Path(__file__).parent.parent.parent.parent / \
             'configs' / 'config.yaml'
         with config_path.open('r') as f:
-            config = yaml.load(f)
+            config = yaml.load(f, Loader=yaml.CLoader)
             outputs_dir = Path(config['outputs_dir'])
         wandb_dir = outputs_dir / 'wandb'
         for run_dir in wandb_dir.iterdir():
@@ -137,12 +137,12 @@ class BaseExperiment():
                     subbatch_idx = features.C[..., -1]
                     subbatch_im_idx = batch['inverse_map'].C[..., -
                                                              1].to(model.device)
-                    if cfg.criterion.task == 'instance':
+                    if cfg.task == 'instance':
                         embedding = model(features).cpu().numpy()
-                    elif cfg.criterion.task == 'semantic':
+                    elif cfg.task == 'semantic':
                         labels = torch.argmax(
                             model(features), dim=1).cpu().numpy()
-                    elif cfg.criterion.task == 'panoptic':
+                    elif cfg.task == 'panoptic':
                         out_c, out_e = model(features)
                         labels = torch.argmax(out_c, dim=1).cpu().numpy()
                         embedding = out_e.cpu().numpy()
@@ -153,13 +153,13 @@ class BaseExperiment():
                         output_path = output_dir / event_name
                         mask = (subbatch_idx == j).cpu().numpy()
                         im_mask = (subbatch_im_idx == j).cpu().numpy()
-                        if cfg.criterion.task == 'instance':
+                        if cfg.task == 'instance':
                             np.savez_compressed(
                                 output_path, embedding=embedding[mask][inverse_map[im_mask]])
-                        elif cfg.criterion.task == 'semantic':
+                        elif cfg.task == 'semantic':
                             np.savez_compressed(
                                 output_path, labels=labels[mask][inverse_map[im_mask]])
-                        elif cfg.criterion.task == 'panoptic':
+                        elif cfg.task == 'panoptic':
                             np.savez_compressed(
                                 output_path, labels=labels[mask][inverse_map[im_mask]], embedding=embedding[mask][inverse_map[im_mask]])
 
@@ -180,7 +180,9 @@ class BaseExperiment():
             input_paths = dataloader.dataset.files
         else:
             m = len(dataloader.dataset.files)
-            input_paths = dataloader.dataset.files[m-n:m]
+            if n > m:
+                n = m
+            input_paths = dataloader.dataset.files[:n]
 
         events = []
 
