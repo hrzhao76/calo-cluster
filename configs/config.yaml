@@ -1,8 +1,8 @@
 config_version: 2
-outputs_dir: /global/cscratch1/sd/schuya/calo_cluster/training_outputs
-predictions_dir: /global/cscratch1/sd/schuya/calo_cluster/predictions
-plots_dir: /global/cscratch1/sd/schuya/calo_cluster/plots
-data_dir: /global/cscratch1/sd/schuya/calo_cluster/data
+outputs_dir: /home/ubuntu/SPVCNN/training_outputs
+predictions_dir: /home/ubuntu/SPVCNN/predictions
+plots_dir: /home/ubuntu/SPVCNN/plots
+data_dir: /home/ubuntu/SPVCNN/data
 hydra:
   run:
     dir: ${outputs_dir}/hydra/${now:%Y-%m-%d}/${now:%H-%M-%S}
@@ -21,6 +21,6 @@ defaults:
   - embed_criterion: offset
   - scheduler: one_cycle_lr
   - model: spvcnn_offset
-  - wandb: upload
+  - wandb: local
   - checkpoint: all
   - swa: inactive
