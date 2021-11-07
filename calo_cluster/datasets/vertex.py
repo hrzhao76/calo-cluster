@@ -33,4 +33,4 @@ class VertexDataModule(SparseDataModuleMixin, ScaledDataModuleMixin, VertexDataM
 class VertexOffsetDataModule(SparseDataModuleMixin, OffsetDataModuleMixin, ScaledDataModuleMixin, VertexDataModuleMixin):
     def make_dataset(self, files: List[Path], split: str) -> VertexOffsetDataset:
         kwargs = self.make_dataset_kwargs()
-        return VertexOffsetDataset(files=files, split=split, **kwargs)
+        return VertexOffsetDataset(files=files, **kwargs)
