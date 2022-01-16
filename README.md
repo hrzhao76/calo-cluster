@@ -61,3 +61,19 @@ Configuration and command-line arguments are handled using [hydra](https://hydra
 
 ## Evaluation
 See `notebooks/simple/simple_instance` for an example of how you can evaluate performance once you have trained a model.
+
+
+# Vertexing old codebase 
+One successful run recording on wandb is `uw-hgcal/vertex-spvcnn/2s303bl3`
+
+Some SPVCNN event display results can be found at [images](./notebooks/vertex/images)
+## root_to_pickle() 
+This function is changed to read Truth information rather than AMVF fitted output as input to train SPVCNN. 
+
+The input data dir is `/global/cscratch1/sd/hrzhao/calo_cluster/data/vertex/raw`. However this dataset is inappropriate cause only >2 tracks events are stored for truth events.  
+
+
+## coordinates and features
+excluding time when training, ["d0","z0","phi","theta","qp"] 
+
+
