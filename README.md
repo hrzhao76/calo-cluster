@@ -68,7 +68,7 @@ One successful run recording on wandb is `uw-hgcal/vertex-spvcnn/2s303bl3`
 
 Some SPVCNN event display results can be found at [images](./notebooks/vertex/images)
 ## root_to_pickle() 
-This function is changed to read Truth information rather than AMVF fitted output as input to train SPVCNN. 
+This function is changed to read Truth information rather than AMVF fitted output as input to train SPVCNN.  See [vertex.py](./calo_cluster/datasets/mixins/vertex.py#L54)
 
 The input data dir is `/global/cscratch1/sd/hrzhao/calo_cluster/data/vertex/raw`. However this dataset is inappropriate cause only >2 tracks events are stored for truth events.  
 
@@ -76,4 +76,5 @@ The input data dir is `/global/cscratch1/sd/hrzhao/calo_cluster/data/vertex/raw`
 ## coordinates and features
 excluding time when training, ["d0","z0","phi","theta","qp"] 
 
+see [config](./configs/dataset/vertex.yaml#L17)
 
